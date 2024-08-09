@@ -1,11 +1,14 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, Form, Heading, Input, Label, Select } from "./styles"
 import { Button } from "../Button"
+import http from "../../http"
 
 export const TransactionForm = () => {
 
     const [transactionType, setTransactionType] = useState('')
     const [transactionValue, setSetTransactionValue] = useState('')
+
+    const [transactionTypes, setTransactionTypes] = useState([])
 
     const createTransacion = (evt) => {
         evt.preventDefault()
@@ -14,6 +17,13 @@ export const TransactionForm = () => {
             transactionValue
         })
     }
+
+    useEffect(() => {
+        http.get('transactions/types')
+            .then(response => {
+                setTransactionTypes(response.data)
+            })
+    }, [])
 
     return (
         <Card>
@@ -29,6 +39,7 @@ export const TransactionForm = () => {
                     <option value="" disabled hidden>
                         Selecione o tipo de transação
                     </option>
+                    {transactionTypes.map(t => <option value={t.value} key={t.value}>{t.display}</option>)}
                 </Select>
                 <div>
                     <Label>
