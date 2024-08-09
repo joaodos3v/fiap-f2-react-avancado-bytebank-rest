@@ -4,6 +4,8 @@ import { Sidebar } from "./components/Sidebar"
 import { Account } from "./components/Account"
 import { TransactionForm } from "./components/TransactionForm"
 import { Statement } from "./components/Statement"
+import { useEffect, useState } from "react"
+import http from "./http"
 
 const Container = styled.div`
   display: flex;
@@ -21,6 +23,20 @@ const Main = styled.main`
 
 function App() {
 
+  const [transactions, setTransactions] = useState([])
+
+  useEffect(() => {
+    http.get('transactions')
+      .then((response) => {
+        setTransactions(response.data)
+      })
+      .catch((err) => {
+        console.error('Alguma coisa deu errado')
+        console.error(err)
+      })
+  }, [])
+
+
   return (
     <>
       <Header />
@@ -31,7 +47,7 @@ function App() {
           <TransactionForm />
         </Main>
         <div>
-          <Statement />
+          <Statement transactions={transactions}/>
         </div>
       </Container>
     </>

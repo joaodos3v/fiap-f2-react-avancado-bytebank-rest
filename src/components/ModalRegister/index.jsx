@@ -10,7 +10,7 @@ export const ModalRegister = () => {
     <>
       <TransparentButton onClick={() => setModalOpen(true)}>Cadastro</TransparentButton>
       <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
-        <FormRegister onRegister={() => console.log('register')}/>
+        <FormRegister onRegister={() => setModalOpen(false)}/>
       </Modal>
     </>
   );

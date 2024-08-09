@@ -6,6 +6,7 @@ import { FormLabel } from "../FormLabel";
 import { TextField } from "../TextField";
 import { Figure, Heading, Image } from "./styles";
 import PropTypes from 'prop-types';
+import http from "../../http";
 
 export const FormRegister = ({ onRegister }) => {
     const [user, setUser] = useState({ name: '', email: '', password: '' });
@@ -20,8 +21,11 @@ export const FormRegister = ({ onRegister }) => {
 
     const registerUser = (evt) => {
         evt.preventDefault();
-        console.log(user);
-        onRegister()
+        // console.log(user);
+        http.post('/users', user)
+            .then(() => {
+                onRegister()
+            })
     };
 
     return (
