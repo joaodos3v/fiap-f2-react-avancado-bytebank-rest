@@ -24,7 +24,7 @@ export const FormLogin = ({ onLogin }) => {
         // console.log(credentials);
         http.post('auth/token', credentials)
             .then((response) => {
-                console.log(response.data)
+                sessionStorage.setItem('token', response.data.accessToken)
                 onLogin()
             })
 

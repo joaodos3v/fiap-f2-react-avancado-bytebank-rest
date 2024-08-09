@@ -1,6 +1,6 @@
 import { Balance } from "./Balance";
 import { BalanceWrapper, Card, DateWrapper, Heading } from "./styles"
-
+import PropTypes from 'prop-types'
 
 const options = {
   weekday: 'long',
@@ -9,7 +9,7 @@ const options = {
   year: 'numeric'
 };
 
-export const Account = () => {
+export const Account = ({ balance }) => {
     return (<Card>
         <div>
             <Heading>
@@ -20,7 +20,11 @@ export const Account = () => {
             </DateWrapper>
         </div>
         <BalanceWrapper>
-            <Balance valor={2500}/>
+            <Balance valor={balance}/>
         </BalanceWrapper>
     </Card>)
+}
+
+Account.propTypes = {
+    balance: PropTypes.number.isRequired,
 }

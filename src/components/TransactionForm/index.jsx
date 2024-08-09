@@ -2,8 +2,9 @@ import { useEffect, useState } from "react"
 import { Card, Form, Heading, Input, Label, Select } from "./styles"
 import { Button } from "../Button"
 import http from "../../http"
+import PropTypes from 'prop-types'
 
-export const TransactionForm = () => {
+export const TransactionForm = ({ onFormSubmit }) => {
 
     const [transactionType, setTransactionType] = useState('')
     const [transactionValue, setSetTransactionValue] = useState('')
@@ -12,10 +13,7 @@ export const TransactionForm = () => {
 
     const createTransacion = (evt) => {
         evt.preventDefault()
-        console.log({
-            transactionType,
-            transactionValue
-        })
+        onFormSubmit(transactionType, transactionValue)
     }
 
     useEffect(() => {
@@ -60,3 +58,7 @@ export const TransactionForm = () => {
         </Card>
     )
 }
+
+TransactionForm.propTypes = {
+    onFormSubmit: PropTypes.func.isRequired,
+};

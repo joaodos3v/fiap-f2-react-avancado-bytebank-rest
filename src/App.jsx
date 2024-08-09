@@ -24,16 +24,52 @@ const Main = styled.main`
 function App() {
 
   const [transactions, setTransactions] = useState([])
+  const [balance, setBalance] = useState(0)
 
-  useEffect(() => {
+  function fetchTransactions() {
     http.get('transactions')
       .then((response) => {
-        setTransactions(response.data)
+        setTransactions(response.data.map(t => {
+          return {
+            id: t._id,
+            value: t.value,
+            type: t.type,
+            date: new Date(t.createdAt)
+          }
+        }))
       })
       .catch((err) => {
         console.error('Alguma coisa deu errado')
         console.error(err)
       })
+  }
+
+  function addTransaction(type, value) {
+    http.post('transactions', {
+      type,
+      value: parseFloat(value)
+    })
+      .then((response) => {
+        console.log(response.data)
+        fetchTransactions()
+        fetchBalance()
+      })
+      .catch((err) => {
+        console.error('Alguma coisa deu errado ao criar uma transação')
+        console.error(err)
+      })
+  }
+
+  function fetchBalance() {
+    http.get('transactions/balance')
+    .then((response) => {
+      setBalance(response.data.balance)
+    })
+  }
+
+  useEffect(() => {
+    fetchTransactions()
+    fetchBalance()
   }, [])
 
 
@@ -43,11 +79,11 @@ function App() {
       <Container>
         <Sidebar />
         <Main>
-          <Account />
-          <TransactionForm />
+          <Account balance={balance}/>
+          <TransactionForm onFormSubmit={addTransaction}/>
         </Main>
         <div>
-          <Statement transactions={transactions}/>
+          <Statement transactions={transactions} />
         </div>
       </Container>
     </>
