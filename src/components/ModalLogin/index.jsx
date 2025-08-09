@@ -10,7 +10,7 @@ export const ModalLogin = () => {
     <>
       <TransparentButton onClick={() => setModalOpen(true)}>Login</TransparentButton>
       <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
-        <FormLogin onLogin={() => console.log('login')}/>
+        <FormLogin onLogin={() => setModalOpen(false)}/>
       </Modal>
     </>
   );

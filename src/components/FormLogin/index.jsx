@@ -20,10 +20,9 @@ export const FormLogin = ({ onLogin }) => {
 
     const loginUser = (evt) => {
         evt.preventDefault();
-        // console.log(credentials);
         http.post('auth/token', credentials)
             .then(response => {
-                const { acessToken } = response.data;
+                sessionStorage.setItem('token', response.data.accessToken);
                 onLogin();
             });
 
