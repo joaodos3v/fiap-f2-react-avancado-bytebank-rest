@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState } from "react";
 import { Button } from "../Button";
 import { Fieldset } from "../Fieldset";
@@ -5,7 +6,6 @@ import { Form, FormActions } from "../Form";
 import { FormLabel } from "../FormLabel";
 import { TextField } from "../TextField";
 import { Figure, Heading, Image } from "./styles";
-import PropTypes from 'prop-types';
 
 export const FormLogin = ({ onLogin }) => {
     const [credentials, setCredentials] = useState({ email: '', password: '' });
@@ -20,7 +20,13 @@ export const FormLogin = ({ onLogin }) => {
 
     const loginUser = (evt) => {
         evt.preventDefault();
-        console.log(credentials);
+        // console.log(credentials);
+        http.post('auth/token', credentials)
+            .then(response => {
+                const { acessToken } = response.data;
+                onLogin();
+            });
+
         onLogin()
     };
 
