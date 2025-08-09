@@ -1,11 +1,12 @@
+import PropTypes from 'prop-types';
 import { useState } from "react";
+import http from "../../http";
 import { Button } from "../Button";
 import { Fieldset } from "../Fieldset";
 import { Form, FormActions } from "../Form";
 import { FormLabel } from "../FormLabel";
 import { TextField } from "../TextField";
 import { Figure, Heading, Image } from "./styles";
-import PropTypes from 'prop-types';
 
 export const FormRegister = ({ onRegister }) => {
     const [user, setUser] = useState({ name: '', email: '', password: '' });
@@ -20,7 +21,13 @@ export const FormRegister = ({ onRegister }) => {
 
     const registerUser = (evt) => {
         evt.preventDefault();
-        console.log(user);
+        // console.log(user);
+        
+        http.post('/users', user)
+            .then(() => {
+                onRegister();
+            });
+
         onRegister()
     };
 
