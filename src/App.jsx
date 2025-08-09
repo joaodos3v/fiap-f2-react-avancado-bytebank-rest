@@ -1,10 +1,10 @@
+import { useEffect, useState } from "react"
 import styled from "styled-components"
+import { Account } from "./components/Account"
 import { Header } from "./components/Header"
 import { Sidebar } from "./components/Sidebar"
-import { Account } from "./components/Account"
-import { TransactionForm } from "./components/TransactionForm"
 import { Statement } from "./components/Statement"
-import { useEffect, useState } from "react"
+import { TransactionForm } from "./components/TransactionForm"
 import http from "./http"
 
 const Container = styled.div`
@@ -24,13 +24,33 @@ const Main = styled.main`
 function App() {
   const [transactions, setTransactions] = useState([]);
 
-  useEffect(() => { 
+  function fetchTransactions() {
     http.get('transactions')
       .then(response => {
-        setTransactions(response.data);
+        setTransactions(response.data.map(transaction => ({
+            ...transaction,
+            id: transaction._id,
+            value: transaction.value,
+            type: transaction.type,
+            date: new Date(transaction.createdAt)
+          })
+        ));
       }).catch(error => {
         console.error("Error fetching transactions:", error);
       });
+  }
+
+  function addTransaction(type, value) {
+    return http.post('transactions', { type, value: parteFloat(value) })
+      .then(response => {
+        fetchTransactions();
+      }).catch(error => {
+        console.error("Error creating transaction:", error);
+      });
+  }
+
+  useEffect(() => {
+    fetchTransactions();
   }, []);
 
   return (
@@ -40,7 +60,7 @@ function App() {
         <Sidebar />
         <Main>
           <Account />
-          <TransactionForm />
+          <TransactionForm onFormSubmit={addTransaction} />
         </Main>
         <div>
           <Statement transactions={transactions} />
