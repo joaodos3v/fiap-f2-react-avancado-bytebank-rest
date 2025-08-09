@@ -22,6 +22,7 @@ const Main = styled.main`
 `
 
 function App() {
+  const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
 
   function fetchTransactions() {
@@ -41,16 +42,25 @@ function App() {
   }
 
   function addTransaction(type, value) {
-    return http.post('transactions', { type, value: parteFloat(value) })
+    http.post('transactions', { type, value: parteFloat(value) })
       .then(response => {
         fetchTransactions();
+        fetchBalance();
       }).catch(error => {
         console.error("Error creating transaction:", error);
       });
   }
 
+  function fetchBalance() {
+    http.get('transactions/balance')
+      .then(response => {
+        setBalance(response.data.balance);
+      });
+  }
+
   useEffect(() => {
     fetchTransactions();
+    fetchBalance();
   }, []);
 
   return (
@@ -59,7 +69,7 @@ function App() {
       <Container>
         <Sidebar />
         <Main>
-          <Account />
+          <Account balance={balance} />
           <TransactionForm onFormSubmit={addTransaction} />
         </Main>
         <div>
